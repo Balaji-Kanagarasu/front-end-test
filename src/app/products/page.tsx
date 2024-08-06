@@ -1,15 +1,14 @@
-import { columns } from "@/app/columns";
-import { Product } from "@/common/interface";
-import { DataTable } from "@/components/DataTable";
+import { IProduct } from "@/common/interface";
+import ProductTableComponent from "@/components/ProductTableComponent";
 import { getProductDetails } from "@/services";
 
 const ProductsPage = async () => {
-  const productsRes: Product[] | [{ message: string }] =
+  const productsRes: IProduct[] | [{ message: string }] =
     await getProductDetails();
 
   return (
     <div>
-      <DataTable columns={columns} data={productsRes as Product[]} />
+      <ProductTableComponent productsRes={productsRes} />
     </div>
   );
 };

@@ -1,9 +1,9 @@
 "use client";
 import AuthForm from "@/components/AuthForm";
-import axios from "axios";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { baseInstance } from "@/services";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const Login: React.FC = () => {
   const route: AppRouterInstance = useRouter();
@@ -12,24 +12,23 @@ const Login: React.FC = () => {
 
   /**
    * Handles the login process by sending a POST request with the provided username and password.
-   *
-   * This function makes an asynchronous request to the login endpoint with the user's credentials.
-   * It then processes the response to determine the success of the login attempt:
-   * - If the response status is 200, it updates the state to indicate a successful login.
-   * - Otherwise, it updates the state to indicate a failure.
-   *
+  
    * @param {Object} data - An object containing the username and password.
    */
   const handleLogin = async (data: { username: string; password: string }) => {
-    const res = await axios.post("https://dummyjson.com/auth/login", data, {
-      headers: { "Content-Type": "application/json" },
-    });
+    try {
+      const res = await baseInstance.post("/auth/login", data, {
+        headers: { "Content-Type": "application/json" },
+      });
 
-    setMessage(res.data?.message ?? res.data?.username);
-    if (res.status === 200) {
-      setIsSuccess(true);
-      route.push("/products");
-    } else {
+      setMessage(res.data?.message ?? res.data?.username);
+      if (res.status === 200) {
+        setIsSuccess(true);
+        route.push("/products");
+      } else {
+        setIsSuccess(false);
+      }
+    } catch (error) {
       setIsSuccess(false);
     }
   };

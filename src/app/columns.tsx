@@ -1,12 +1,11 @@
 "use client";
-import { fetchReviews } from "@/services";
 import { Button } from "@mui/material";
 import { ColumnDef } from "@tanstack/react-table";
 
 /**
  * Column definition for the product table.
  */
-export const columns: ColumnDef<any>[] = [
+export const columns = (handleClick: any): ColumnDef<any>[] => [
   { accessorKey: "id", header: "ID" },
   { accessorKey: "title", header: "Title" },
   { accessorKey: "description", header: "Description" },
@@ -21,7 +20,7 @@ export const columns: ColumnDef<any>[] = [
     id: "actions",
     header: "Actions",
     cell: ({ row }) => (
-      <Button color="info" onClick={() => fetchReviews(row?.original?.id)}>
+      <Button color="info" onClick={() => handleClick(row)}>
         View Reviews
       </Button>
     ),

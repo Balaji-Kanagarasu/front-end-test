@@ -1,15 +1,19 @@
-import { Product } from "@/common/interface";
+import { IProduct } from "@/common/interface";
 import axios, { AxiosResponse } from "axios";
+
+export const baseInstance = axios.create({
+  baseURL: "https://dummyjson.com",
+});
 
 /**
  * Function responsible to fetch all product details.
  */
 export const getProductDetails = async (): Promise<
-  Product[] | [{ message: any }]
+  IProduct[] | [{ message: any }]
 > => {
   try {
-    const response: AxiosResponse<{ products: Product[] }, any> =
-      await axios.get("https://dummyjson.com/products");
+    const response: AxiosResponse<{ products: IProduct[] }, any> =
+      await baseInstance.get("/products");
     return response?.data?.products;
   } catch (error: any) {
     return [{ message: error?.message }];
@@ -22,11 +26,11 @@ export const getProductDetails = async (): Promise<
  */
 export const fetchReviews = async (
   productId: number
-): Promise<Product | { message: any } | undefined> => {
+): Promise<IProduct | { message: any } | undefined> => {
   try {
     if (productId) {
-      const response: AxiosResponse<Product, any> = await axios.get(
-        `https://dummyjson.com/products/${productId}`
+      const response: AxiosResponse<IProduct, any> = await baseInstance.get(
+        `/products/${productId}`
       );
       return response?.data;
     }

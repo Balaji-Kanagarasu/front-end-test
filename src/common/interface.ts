@@ -1,4 +1,4 @@
-export interface Product {
+export interface IProduct {
   id: number;
   title: string;
   description: string;
@@ -9,15 +9,11 @@ export interface Product {
   stock: number;
   tags: string[];
   brand: string;
-  reviews?: Review[];
+  reviews?: IReview[];
 }
 
-export interface Review {
+export interface IReview {
   id: number;
   review: string;
   rating: number;
-}
-
-export interface ProductsPageProps {
-  products: Product[];
 }

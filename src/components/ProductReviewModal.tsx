@@ -1,46 +1,88 @@
 "use client";
-import { Product, Review } from "@/common/interface";
+import { IProduct } from "@/common/interface";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Button,
-  Typography,
-  List,
-  ListItem,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-const ProductReviewModal = ({ productInfo }: { productInfo: Product }) => {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(
-    productInfo ?? null
-  );
-  const [reviews, setReviews] = useState<Review[]>(productInfo?.reviews ?? []);
-  const [isDialogOpen, setIsDialogOpen] = useState(!!productInfo);
+interface IProps {
+  productInfo: IProduct;
+  setModalData: Dispatch<SetStateAction<IProduct | null>>;
+}
 
+const ProductReviewModal = ({ productInfo, setModalData }: IProps) => {
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+
+  /**
+   * To update the product data.
+   */
   useEffect(() => {
-    return () => {
-      setSelectedProduct(null);
-      setReviews([]);
-    };
-  }, []);
+    if (productInfo) {
+      setIsDialogOpen(true);
+    }
+  }, [productInfo]);
+
+  /**
+   * To handle the Dialog close.
+   */
+  const handleClose = () => {
+    setIsDialogOpen(false);
+    setModalData(null);
+  };
 
   return (
-    <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
-      <DialogTitle>Reviews for {selectedProduct?.title}</DialogTitle>
+    <Dialog
+      open={isDialogOpen}
+      onClose={handleClose}
+      sx={{
+        "& .MuiDialog-paper": {
+          width: "80%", // Adjust the width as needed
+          maxWidth: "none", // Optional: Remove the default maxWidth constraint
+        },
+      }}
+    >
+      <DialogTitle>Reviews for {productInfo?.title}</DialogTitle>
       <DialogContent>
-        <List>
-          {reviews.map((review) => (
-            <ListItem key={review.id}>
-              <Typography variant="body1">{review.review}</Typography>
-              <Typography variant="body2">Rating: {review.rating}</Typography>
-            </ListItem>
-          ))}
-        </List>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Reviewer Name</TableCell>
+                <TableCell>Reviewer Email</TableCell>
+                <TableCell>Rating</TableCell>
+                <TableCell>Comment</TableCell>
+                <TableCell>Date</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {productInfo?.reviews?.map((review: any, reviewIndex: number) => (
+                <TableRow key={`${review?.reviewerEmail}_${reviewIndex}`}>
+                  <TableCell>{review.reviewerName}</TableCell>
+                  <TableCell>{review.reviewerEmail}</TableCell>
+                  <TableCell>{review.rating}</TableCell>
+                  <TableCell>{review.comment}</TableCell>
+                  <TableCell>
+                    {new Date(review.date).toLocaleDateString()}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => setIsDialogOpen(false)}>Close</Button>
+        <Button onClick={handleClose}>Close</Button>
       </DialogActions>
     </Dialog>
   );

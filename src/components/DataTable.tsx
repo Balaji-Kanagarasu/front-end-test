@@ -5,7 +5,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Table, TableContainer, Tbody, Td, Th, Thead, TRow } from "./Table";
+import { Table, TableContainer, Tbody, Td, Th, TRow } from "./Table";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
